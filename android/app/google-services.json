@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "669406071146",
+    "firebase_url": "https://flash-chat-e17bd.firebaseio.com",
+    "project_id": "flash-chat-e17bd",
+    "storage_bucket": "flash-chat-e17bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669406071146:android:4afd63354cd70761927d13",
+        "android_client_info": {
+          "package_name": "tech.goutambseervi.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669406071146-b92a7cp3mlp43f0pbc59lobo3b3bg98c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC54ThZbjlgY5uW4ppBvtN9O7Mr-1tE8lI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669406071146-b92a7cp3mlp43f0pbc59lobo3b3bg98c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
