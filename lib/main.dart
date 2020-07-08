@@ -1,7 +1,9 @@
 import 'package:flash_chat/screens/chat_screen.dart';
+import 'package:flash_chat/screens/chats_screen.dart';
 import 'package:flash_chat/screens/login_screen.dart';
-import 'package:flash_chat/screens/registration_screen.dart';
-import 'package:flash_chat/screens/welcome_screen.dart';
+import 'package:flash_chat/screens/splash_screen.dart';
+import 'package:flash_chat/screens/terms_and_conditions.dart';
+import 'package:flash_chat/screens/verify_number.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(FlashChat());
@@ -10,11 +12,15 @@ class FlashChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: WelcomeScreen.id,
+      initialRoute: SplashScreen.id,
+      // initialRoute: WelcomeScreen.id,
+      // initialRoute: VerifyNumberScreen.id,
       routes: {
-        WelcomeScreen.id: (context) => WelcomeScreen(),
+        SplashScreen.id: (context) => SplashScreen(),
+        TermsAndConditions.id: (context) => TermsAndConditions(),
         LoginScreen.id: (context) => LoginScreen(),
-        RegistrationScreen.id: (context) => RegistrationScreen(),
+        VerifyNumberScreen.id: (context) => VerifyNumberScreen('blahdsjadasjk'),
+        ChatsScreen.id: (context) => ChatsScreen(),
         ChatScreen.id: (context) => ChatScreen(),
       },
     );
