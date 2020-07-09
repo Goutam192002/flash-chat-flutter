@@ -1,6 +1,7 @@
 import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flash_chat/screens/chats_screen.dart';
 import 'package:flash_chat/screens/login_screen.dart';
+import 'package:flash_chat/screens/profile_screen.dart';
 import 'package:flash_chat/screens/splash_screen.dart';
 import 'package:flash_chat/screens/terms_and_conditions.dart';
 import 'package:flash_chat/screens/verify_number.dart';
@@ -20,6 +21,7 @@ class FlashChat extends StatelessWidget {
         TermsAndConditions.id: (context) => TermsAndConditions(),
         LoginScreen.id: (context) => LoginScreen(),
         VerifyNumberScreen.id: (context) => VerifyNumberScreen('blahdsjadasjk'),
+        ProfileScreen.id: (context) => ProfileScreen('jdsajhjhsadhjjh'),
         ChatsScreen.id: (context) => ChatsScreen(),
         ChatScreen.id: (context) => ChatScreen(),
       },

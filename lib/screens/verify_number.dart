@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/rounded_button.dart';
+import 'package:flash_chat/resolvers/user_resolver.dart';
 import 'package:flash_chat/screens/chats_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,7 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
   bool hasError = false;
   String otp = "";
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
 
   verifyOTP() async {
     try {
@@ -98,8 +101,18 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
                 margin: EdgeInsets.symmetric(horizontal: 18),
                 child: RoundedButton(
                   color: Colors.lightBlueAccent,
-                  onPressed: () async {
-                    print(otp);
+                  onPressed: () {
+                    setState(() {
+                      showSpinner = true;
+                    });
+                    AuthCredential _credential =
+                        PhoneAuthProvider.getCredential(
+                            verificationId: verificationId, smsCode: otp);
+                    _auth.signInWithCredential(_credential).then((value) {
+                      resolveUser(context, value.user.uid);
+                    }).catchError((e) {
+                      print(e);
+                    });
                   },
                   title: 'Next',
                 ),

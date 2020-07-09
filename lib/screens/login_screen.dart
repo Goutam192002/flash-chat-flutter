@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/rounded_button.dart';
-import 'package:flash_chat/screens/chats_screen.dart';
+import 'package:flash_chat/resolvers/user_resolver.dart';
 import 'package:flash_chat/screens/verify_number.dart';
 import 'package:flutter/material.dart';
 import 'package:international_phone_input/international_phone_input.dart';
@@ -38,8 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         timeout: Duration(seconds: 30),
         verificationCompleted: (AuthCredential authCredential) {
           _auth.signInWithCredential(authCredential).then((value) {
-            print(value);
-            Navigator.pushNamed(context, ChatsScreen.id);
+            resolveUser(context, value.user.uid);
           }).catchError((e) {
             print(e);
             setState(() {
