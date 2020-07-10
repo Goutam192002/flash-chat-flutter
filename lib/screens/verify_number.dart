@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/resolvers/user_resolver.dart';
@@ -28,7 +27,6 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
   bool hasError = false;
   String otp = "";
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final Firestore _firestore = Firestore.instance;
 
   verifyOTP() async {
     try {
@@ -109,7 +107,7 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
                         PhoneAuthProvider.getCredential(
                             verificationId: verificationId, smsCode: otp);
                     _auth.signInWithCredential(_credential).then((value) {
-                      resolveUser(context, value.user.uid);
+                      resolveUser(context, value.user);
                     }).catchError((e) {
                       print(e);
                     });

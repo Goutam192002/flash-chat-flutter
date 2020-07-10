@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSContactsUsageDescription</key>
+    <string>We need access to your contacts to enable us to search your friends easily.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>To browse and send photos and videos to your friends.</string>
     <key>NSCameraUsageDescription</key>

@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushNamed(context, TermsAndConditions.id);
       return;
     }
-    resolveUser(context, user.uid);
+    resolveUser(context, user);
   }
 
   @override

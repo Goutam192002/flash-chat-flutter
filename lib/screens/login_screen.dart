@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         timeout: Duration(seconds: 30),
         verificationCompleted: (AuthCredential authCredential) {
           _auth.signInWithCredential(authCredential).then((value) {
-            resolveUser(context, value.user.uid);
+            resolveUser(context, value.user);
           }).catchError((e) {
             print(e);
             setState(() {

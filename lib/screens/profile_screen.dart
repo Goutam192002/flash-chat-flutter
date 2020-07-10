@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/components/upload_picture_action_item.dart';
@@ -12,17 +13,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen(this.uid);
+  ProfileScreen(this.user);
 
-  final String uid;
+  final FirebaseUser user;
   static final String id = 'profile_screen';
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState(uid);
+  _ProfileScreenState createState() => _ProfileScreenState(user);
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  _ProfileScreenState(this.uid);
+  _ProfileScreenState(this.user);
 
   File _imageFile;
   String _imageUrl;
@@ -32,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool showSpinner = false;
   bool showSpinnerMain = false;
 
-  final String uid;
+  final FirebaseUser user;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final Firestore _firestore = Firestore.instance;
 
@@ -40,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     _storage
         .ref()
-        .child('/profile-pictures/$uid.png')
+        .child('/profile-pictures/${user.uid}.png')
         .getDownloadURL()
         .then((value) {
       setState(() {
@@ -125,8 +126,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         showSpinnerMain = true;
       });
-      await _firestore.collection('users').document(uid).setData(
-          {'profile_picture': _imageUrl, 'name': _name, 'status': _status});
+      await _firestore.collection('users').document(user.uid).setData({
+        'mobile_number': user.phoneNumber,
+        'profile_picture': _imageUrl,
+        'name': _name,
+        'status': _status
+      });
       Navigator.pushReplacementNamed(context, ChatsScreen.id);
     } catch (e) {
       setState(() {
@@ -161,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       showSpinner = true;
     });
-    String filePath = 'profile-pictures/$uid.png';
+    String filePath = 'profile-pictures/${user.uid}.png';
     _uploadTask = _storage.ref().child(filePath).putFile(image);
     _uploadTask.onComplete.then((value) async {
       String downloadUrl = await value.ref.getDownloadURL();
