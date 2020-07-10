@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
-import 'package:flash_chat/components/chat_item.dart';
 import 'package:flash_chat/components/invite_item.dart';
 import 'package:flutter/material.dart';
 
 class UserSearchDelegate extends SearchDelegate {
+  Firestore _firestore = Firestore.instance;
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [];
@@ -41,7 +43,8 @@ class UserSearchDelegate extends SearchDelegate {
             itemCount: contacts.length,
             itemBuilder: (context, index) {
               Contact contact = contacts[index];
-              return ChatItem(
+              // TODO: check if contact exists
+              return InviteItem(
                 name: contact.displayName,
               );
             },
