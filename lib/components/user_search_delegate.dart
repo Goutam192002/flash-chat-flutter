@@ -101,6 +101,9 @@ class UserSearchDelegate extends SearchDelegate {
                 } else {
                   return ChatItem(
                     name: contact.name,
+                    message: contact.lastMessage != null
+                        ? contact.lastMessage
+                        : contact.status,
                     profilePicture: contact.profilePictureUrl,
                   );
                 }

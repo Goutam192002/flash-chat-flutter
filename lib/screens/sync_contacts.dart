@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flash_chat/bloc/contact.bloc.dart';
 import 'package:flash_chat/models/contact.dart';
+import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 class SyncContacts extends StatefulWidget {
@@ -30,9 +31,11 @@ class _SyncContactsState extends State<SyncContacts> {
             uid: result.documents.first.documentID,
             mobileNumber: result.documents.first.data['mobile_number'],
             profilePictureUrl: result.documents.first.data['profile_picture'],
-            status: result.documents.first.data['last_seen'],
+            lastSeen: result.documents.first.data['last_seen'],
+            status: result.documents.first.data['status'],
           );
           insert.add(contactObject);
+          Navigator.pushReplacementNamed(context, ChatScreen.id);
         } catch (e) {
           print(e);
         }

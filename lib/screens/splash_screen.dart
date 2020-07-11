@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/resolvers/user_resolver.dart';
 import 'package:flash_chat/screens/terms_and_conditions.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SplashScreen extends StatefulWidget {
   static final String id = 'splash_screen';
@@ -14,6 +15,12 @@ class _SplashScreenState extends State<SplashScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void bootstrap() async {
+    if (!await Permission.contacts.request().isGranted) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.contacts,
+        Permission.storage,
+      ].request();
+    }
     FirebaseUser user = await _auth.currentUser();
     if (user == null) {
       Navigator.pushNamed(context, TermsAndConditions.id);
