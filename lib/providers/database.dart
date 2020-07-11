@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flash_chat/models/contact.dart';
+import 'package:flash_chat/models/message.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -29,7 +30,7 @@ class DatabaseProvider {
       path,
       version: 1,
       onCreate: (db, version) async {
-        return db.execute("CREATE TABLE Contacts ("
+        await db.execute("CREATE TABLE Contacts ("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "uid TEXT,"
             "name TEXT,"
@@ -39,6 +40,12 @@ class DatabaseProvider {
             "profile_picture_url TEXT,"
             "conversation_id TEXT,"
             "status TEXT"
+            ");");
+        await db.execute("CREATE TABLE Messages("
+            "id TEXT PRIMARY KEY,"
+            "message TEXT,"
+            "from TEXT,"
+            "timestamp TEXT"
             ");");
       },
     );
@@ -96,5 +103,41 @@ class DatabaseProvider {
         ? response.map((contact) => ContactModel.fromJSON(contact)).toList()
         : [];
     return contacts;
+  }
+
+  createNewMessage(MessageModel message) async {
+    final db = await database;
+    var raw = db.insert(
+      "Messages",
+      message.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    return raw;
+  }
+
+  updateMessage(MessageModel message) async {
+    final db = await database;
+    var raw = db.update("Messages", {
+      'id': message.id,
+      'message': message.message,
+      'timestamp': message.timestamp.toIso8601String()
+    });
+    return raw;
+  }
+
+  deleteMessage(String id) async {
+    final db = await database;
+    return db.delete("Messages", where: 'id = ?', whereArgs: [id]);
+  }
+  Future<List<MessageModel>> getConversationMessages(String id) async {
+    final db = await database;
+    var response = await db.query(
+      "Messages",
+      where: "id = ?",
+      whereArgs: [id],
+    );
+    return response.isNotEmpty
+        ? response.map((message) => MessageModel.fromJSON(message)).toList()
+        : [];
   }
 }
