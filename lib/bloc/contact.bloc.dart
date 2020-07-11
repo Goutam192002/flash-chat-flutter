@@ -31,7 +31,10 @@ class ContactsBloc {
     getAllContacts();
   }
 
-  searchContacts(String query) {
-    return DatabaseProvider.db.getContactsByName(query);
+  searchContacts(String query) async {
+    if (query != null) {
+      _contactsController.sink
+          .add(await DatabaseProvider.db.getContactsByName(query));
+    }
   }
 }

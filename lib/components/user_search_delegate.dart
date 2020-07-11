@@ -24,56 +24,16 @@ class UserSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return StreamBuilder(
-      stream: _contactsBloc.contacts,
-      builder: (context, AsyncSnapshot<Object> results) {
-        if (!results.hasData) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          );
-        } else {
-          List contacts = results.data;
-          if (contacts.length > 0) {
-            return ListView.builder(
-              itemCount: contacts.length,
-              itemBuilder: (context, index) {
-                ContactModel contact = contacts[index];
-                if (contact.uid == null) {
-                  return InviteItem(
-                    name: contact.name,
-                  );
-                } else {
-                  return ChatItem(
-                    name: contact.name,
-                    message: contact.lastMessage != null
-                        ? contact.lastMessage
-                        : contact.status,
-                    profilePicture: contact.profilePictureUrl,
-                  );
-                }
-              },
-            );
-          }
-          return Column(
-            children: <Widget>[
-              Text(
-                "No Results Found.",
-              ),
-            ],
-          );
-        }
-      },
-    );
+    return resultStream(context);
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    return resultStream(context);
+  }
+
+  resultStream(BuildContext context) {
+    _contactsBloc.searchContacts(query);
     return StreamBuilder(
       stream: _contactsBloc.contacts,
       builder: (context, AsyncSnapshot<Object> results) {

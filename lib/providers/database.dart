@@ -67,8 +67,8 @@ class DatabaseProvider {
     final db = await database;
     var response = await db.query(
       "Contacts",
-      where: "name = ?",
-      whereArgs: [query],
+      where: "name LIKE ?",
+      whereArgs: ['%$query%'],
     );
     return response.isNotEmpty
         ? response.map((contact) => ContactModel.fromJSON(contact)).toList()
