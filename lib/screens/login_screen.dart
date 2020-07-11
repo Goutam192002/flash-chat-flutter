@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => VerifyNumberScreen(verificationId),

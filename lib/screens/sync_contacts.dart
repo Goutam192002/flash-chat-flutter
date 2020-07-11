@@ -20,13 +20,14 @@ class _SyncContactsState extends State<SyncContacts> {
     List<ContactModel> insert = [];
     for (Contact contact in contacts) {
       for (var phone in contact.phones) {
+        ContactModel contactObject;
         try {
           var result = await _firestore
               .collection('users')
               .where('mobile_number',
                   isEqualTo: phone.value.replaceAll(' ', ''))
               .getDocuments();
-          ContactModel contactObject = ContactModel(
+          contactObject = ContactModel(
             name: contact.displayName,
             uid: result.documents.first.documentID,
             mobileNumber: result.documents.first.data['mobile_number'],
@@ -34,14 +35,17 @@ class _SyncContactsState extends State<SyncContacts> {
             lastSeen: result.documents.first.data['last_seen'],
             status: result.documents.first.data['status'],
           );
-          insert.add(contactObject);
-          Navigator.pushReplacementNamed(context, ChatsScreen.id);
         } catch (e) {
-          print(e);
+          contactObject = ContactModel(
+            name: contact.displayName,
+            mobileNumber: phone.value,
+          );
         }
+        insert.add(contactObject);
       }
     }
     _contactsBloc.addBulkContacts(insert);
+    Navigator.pushReplacementNamed(context, ChatsScreen.id);
   }
 
   @override

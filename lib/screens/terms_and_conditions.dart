@@ -44,7 +44,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
               RoundedButton(
                 color: Colors.lightBlueAccent,
                 onPressed: () {
-                  Navigator.pushNamed(context, LoginScreen.id);
+                  Navigator.pushReplacementNamed(context, LoginScreen.id);
                 },
                 title: 'Agree and continue',
               ),

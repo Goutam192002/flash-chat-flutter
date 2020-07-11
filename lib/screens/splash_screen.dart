@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     FirebaseUser user = await _auth.currentUser();
     if (user == null) {
-      Navigator.pushNamed(context, TermsAndConditions.id);
+      Navigator.pushReplacementNamed(context, TermsAndConditions.id);
       return;
     }
     resolveUser(context, user);
