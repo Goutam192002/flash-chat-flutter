@@ -19,8 +19,8 @@ class InviteItem extends StatelessWidget {
               backgroundColor: Colors.grey,
               backgroundImage: profilePicture != null
                   ? NetworkImage(
-                profilePicture,
-              )
+                      profilePicture,
+                    )
                   : AssetImage('images/default-profile-image.png'),
             ),
           ),
