@@ -1,19 +1,62 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/bloc/contact.bloc.dart';
+import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 class ChatItem extends StatelessWidget {
-  const ChatItem(
-      {Key key, this.profilePicture, this.name, this.message, this.lastSeen})
-      : super(key: key);
+  ChatItem({
+    Key key,
+    this.profilePicture,
+    this.name,
+    this.message,
+    this.lastSeen,
+    this.conversationId,
+    this.user,
+    this.toUser,
+  }) : super(key: key);
 
+  final Firestore _firestore = Firestore.instance;
+  final ContactsBloc _contactsBloc = ContactsBloc();
+  final FirebaseUser user;
+  final String toUser;
   final String profilePicture;
   final String name;
   final String message;
   final String lastSeen;
+  final String conversationId;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        print(conversationId);
+        if (conversationId != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(
+                conversationId: conversationId,
+              ),
+            ),
+          );
+          return;
+        }
+        DocumentReference conversation =
+            await _firestore.collection('conversations').add({
+          'participants': [toUser, user.uid]
+        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(
+              conversationId: conversation.documentID,
+            ),
+          ),
+        );
+        _contactsBloc
+            .updateContact({'conversation_id': conversation.documentID});
+      },
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,

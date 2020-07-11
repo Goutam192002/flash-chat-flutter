@@ -1,14 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/bloc/contact.bloc.dart';
 import 'package:flash_chat/components/message_bubble.dart';
 import 'package:flash_chat/constants.dart';
+import 'package:flash_chat/models/contact.dart';
 import 'package:flutter/material.dart';
 
 final _fireStore = Firestore.instance;
 FirebaseUser currentUser;
 
 class ChatScreen extends StatefulWidget {
-  static const id = 'chat';
+  static const String id = 'chat';
+  final String conversationId;
+
+  ChatScreen({this.conversationId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -17,13 +22,23 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final messageTextController = TextEditingController();
-
+  final ContactsBloc _contactsBloc = ContactsBloc();
+  ContactModel _conversation;
   String message;
 
   @override
   void initState() {
-    super.initState();
     this.getCurrentUser();
+    this.getConversation();
+    super.initState();
+  }
+
+  getConversation() async {
+    ContactModel conversation =
+        await _contactsBloc.getConversationById(widget.conversationId);
+    setState(() {
+      _conversation = conversation;
+    });
   }
 
   getCurrentUser() async {
@@ -38,15 +53,20 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: null,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                _auth.signOut();
-                Navigator.pop(context);
-              }),
-        ],
-        title: Text('⚡️Chat'),
+        title: Row(
+          children: <Widget>[
+            CircleAvatar(
+              backgroundColor: Colors.grey,
+              backgroundImage: _conversation.profilePictureUrl != null
+                  ? NetworkImage(_conversation.profilePictureUrl)
+                  : AssetImage('images/default-profile-iamge.png'),
+            ),
+            SizedBox(
+              width: 8,
+            ),
+            Text(_conversation.name),
+          ],
+        ),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(

@@ -37,6 +37,7 @@ class DatabaseProvider {
             "last_message TEXT,"
             "last_seen TEXT,"
             "profile_picture_url TEXT,"
+            "conversation_id TEXT,"
             "status TEXT"
             ");");
       },
@@ -50,6 +51,12 @@ class DatabaseProvider {
       contact.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    return raw;
+  }
+
+  updateContact(var update) async {
+    final db = await database;
+    var raw = db.update("Contacts", update);
     return raw;
   }
 
@@ -73,6 +80,13 @@ class DatabaseProvider {
     return response.isNotEmpty
         ? response.map((contact) => ContactModel.fromJSON(contact)).toList()
         : [];
+  }
+
+  Future<ContactModel> getConversation(String conversationId) async {
+    final db = await database;
+    var response = await db.query("Contacts",
+        where: "conversation_id = ?", whereArgs: [conversationId]);
+    return ContactModel.fromJSON(response.first);
   }
 
   Future<List<ContactModel>> getAllContacts() async {

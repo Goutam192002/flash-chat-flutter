@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/bloc/contact.bloc.dart';
 import 'package:flash_chat/components/chat_item.dart';
 import 'package:flash_chat/components/invite_item.dart';
@@ -6,6 +7,9 @@ import 'package:flutter/material.dart';
 
 class UserSearchDelegate extends SearchDelegate {
   final ContactsBloc _contactsBloc = ContactsBloc();
+  final FirebaseUser currentUser;
+
+  UserSearchDelegate(this.currentUser);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -65,6 +69,9 @@ class UserSearchDelegate extends SearchDelegate {
                         ? contact.lastMessage
                         : contact.status,
                     profilePicture: contact.profilePictureUrl,
+                    toUser: contact.uid,
+                    user: currentUser,
+                    conversationId: contact.conversationId,
                   );
                 }
               },

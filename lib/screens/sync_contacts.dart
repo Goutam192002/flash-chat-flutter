@@ -27,14 +27,33 @@ class _SyncContactsState extends State<SyncContacts> {
               .where('mobile_number',
                   isEqualTo: phone.value.replaceAll(' ', ''))
               .getDocuments();
-          contactObject = ContactModel(
-            name: contact.displayName,
-            uid: result.documents.first.documentID,
-            mobileNumber: result.documents.first.data['mobile_number'],
-            profilePictureUrl: result.documents.first.data['profile_picture'],
-            lastSeen: result.documents.first.data['last_seen'],
-            status: result.documents.first.data['status'],
-          );
+          try {
+            var conversation = await _firestore
+                .collection('conversations')
+                .where(
+                  'participants',
+                  arrayContains: result.documents.first.documentID,
+                )
+                .getDocuments();
+            contactObject = ContactModel(
+              name: contact.displayName,
+              uid: result.documents.first.documentID,
+              mobileNumber: result.documents.first.data['mobile_number'],
+              profilePictureUrl: result.documents.first.data['profile_picture'],
+              lastSeen: result.documents.first.data['last_seen'],
+              status: result.documents.first.data['status'],
+              conversationId: conversation.documents.first.documentID,
+            );
+          } catch (e) {
+            contactObject = ContactModel(
+              name: contact.displayName,
+              uid: result.documents.first.documentID,
+              mobileNumber: result.documents.first.data['mobile_number'],
+              profilePictureUrl: result.documents.first.data['profile_picture'],
+              lastSeen: result.documents.first.data['last_seen'],
+              status: result.documents.first.data['status'],
+            );
+          }
         } catch (e) {
           contactObject = ContactModel(
             name: contact.displayName,

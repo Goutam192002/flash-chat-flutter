@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/bloc/contact.bloc.dart';
 import 'package:flash_chat/components/chat_item.dart';
 import 'package:flash_chat/components/user_search_delegate.dart';
+import 'package:flash_chat/models/contact.dart';
 import 'package:flutter/material.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -16,13 +17,14 @@ class _ChatsScreenState extends State<ChatsScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final ContactsBloc _contactsBloc = ContactsBloc();
 
+  FirebaseUser currentUser;
   Iterable<Contact> contacts;
   String query;
 
   @override
   Widget build(BuildContext context) {
     _auth.currentUser().then((value) {
-      print(value.uid);
+      currentUser = value;
     });
     return Scaffold(
       appBar: AppBar(
@@ -33,22 +35,48 @@ class _ChatsScreenState extends State<ChatsScreen> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: UserSearchDelegate(),
+                delegate: UserSearchDelegate(currentUser),
               );
             },
           )
         ],
       ),
       body: Container(
-        child: ListView.builder(
-          itemCount: 0,
-          itemBuilder: (context, position) => ChatItem(),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
+          child: StreamBuilder(
+        stream: _contactsBloc.contacts,
+        builder: (context, AsyncSnapshot<Object> results) {
+          if (!results.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            );
+          } else {
+            List contacts = results.data;
+            contacts = contacts.where((element) => element.lastMessage != null).toList();
+            if (contacts.length > 0) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  ContactModel contact = contacts[index];
+                  return ChatItem(
+                    name: contact.name,
+                    message: contact.lastMessage,
+                    profilePicture: contact.profilePictureUrl,
+                    lastSeen: contact.lastSeen,
+                    user: currentUser,
+                    toUser: contact.uid,
+                  );
+                },
+              );
+            }
+            return Container();
+          }
+        },
+      )),
     );
   }
 }

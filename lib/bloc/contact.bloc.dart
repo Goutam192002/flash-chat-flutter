@@ -24,6 +24,11 @@ class ContactsBloc {
     getAllContacts();
   }
 
+  updateContact(var update) {
+    DatabaseProvider.db.updateContact(update);
+    getAllContacts();
+  }
+
   addBulkContacts(List<ContactModel> contacts) async {
     for (ContactModel contact in contacts) {
       DatabaseProvider.db.createNewContact(contact);
@@ -36,5 +41,9 @@ class ContactsBloc {
       _contactsController.sink
           .add(await DatabaseProvider.db.getContactsByName(query));
     }
+  }
+
+  Future<ContactModel> getConversationById(String conversationId) async {
+    return DatabaseProvider.db.getConversation(conversationId);
   }
 }
