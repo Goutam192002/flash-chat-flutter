@@ -1,1 +1,59 @@
-{"info":"This is a generated file; do not edit or check into version control.","plugins":{"ios":[{"name":"cloud_firestore","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\cloud_firestore-0.13.7\\\\","dependencies":["firebase_core"]},{"name":"contacts_service","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\contacts_service-0.4.6\\\\","dependencies":[]},{"name":"firebase_auth","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\firebase_auth-0.16.1\\\\","dependencies":["firebase_core"]},{"name":"firebase_core","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\firebase_core-0.4.5\\\\","dependencies":[]},{"name":"firebase_storage","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\firebase_storage-3.1.6\\\\","dependencies":["firebase_core"]},{"name":"image_cropper","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\image_cropper-1.2.3\\\\","dependencies":[]},{"name":"image_picker","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\image_picker-0.6.7+4\\\\","dependencies":[]},{"name":"libphonenumber","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\libphonenumber-1.0.1\\\\","dependencies":[]},{"name":"path_provider","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\path_provider-1.6.11\\\\","dependencies":[]},{"name":"sqflite","path":"C:\\\\flutter\\\\.pub-cache\\\\hosted\\\\pub.dartlang.org\\\\sqflite-1.3.1\\\\","dependencies":[]}],"android":[{
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/resolvers/user_resolver.dart';
+import 'package:flash_chat/screens/terms_and_conditions.dart';
+import 'package:flutter/material.dart';
+
+class SplashScreen extends StatefulWidget {
+  static final String id = 'splash_screen';
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void bootstrap() async {
+    FirebaseUser user = await _auth.currentUser();
+    if (user == null) {
+      Navigator.pushNamed(context, TermsAndConditions.id);
+      return;
+    }
+    resolveUser(context, user);
+  }
+
+  @override
+  void initState() {
+    bootstrap();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'images/logo.png',
+              ),
+              Text(
+                "Chat App",
+                style: TextStyle(
+                  fontSize: 48,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
