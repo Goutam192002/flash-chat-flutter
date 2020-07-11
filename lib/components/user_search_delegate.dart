@@ -1,10 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:contacts_service/contacts_service.dart';
+import 'package:flash_chat/bloc/contact.bloc.dart';
+import 'package:flash_chat/components/chat_item.dart';
 import 'package:flash_chat/components/invite_item.dart';
+import 'package:flash_chat/models/contact.dart';
 import 'package:flutter/material.dart';
 
 class UserSearchDelegate extends SearchDelegate {
-  Firestore _firestore = Firestore.instance;
+  final ContactsBloc _contactsBloc = ContactsBloc();
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -23,10 +24,9 @@ class UserSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    Future<Iterable<Contact>> results =
-        ContactsService.getContacts(query: query, withThumbnails: false);
-    return FutureBuilder(
-      builder: (context, AsyncSnapshot<Iterable<Contact>> results) {
+    return StreamBuilder(
+      stream: _contactsBloc.contacts,
+      builder: (context, AsyncSnapshot<Object> results) {
         if (!results.hasData) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,37 +37,46 @@ class UserSearchDelegate extends SearchDelegate {
               ),
             ],
           );
-        } else if (results.data.length != 0) {
-          List contacts = results.data.toList();
-          return ListView.builder(
-            itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              Contact contact = contacts[index];
-              // TODO: check if contact exists
-              return InviteItem(
-                name: contact.displayName,
-              );
-            },
+        } else {
+          List contacts = results.data;
+          if (contacts.length > 0) {
+            return ListView.builder(
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                ContactModel contact = contacts[index];
+                if (contact.uid == null) {
+                  return InviteItem(
+                    name: contact.name,
+                  );
+                } else {
+                  return ChatItem(
+                    name: contact.name,
+                    message: contact.lastMessage != null
+                        ? contact.lastMessage
+                        : contact.status,
+                    profilePicture: contact.profilePictureUrl,
+                  );
+                }
+              },
+            );
+          }
+          return Column(
+            children: <Widget>[
+              Text(
+                "No Results Found.",
+              ),
+            ],
           );
         }
-        return Column(
-          children: <Widget>[
-            Text(
-              "No Results Found.",
-            ),
-          ],
-        );
       },
-      future: results,
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    Future<Iterable<Contact>> results =
-        ContactsService.getContacts(query: query, withThumbnails: false);
-    return FutureBuilder(
-      builder: (context, AsyncSnapshot<Iterable<Contact>> results) {
+    return StreamBuilder(
+      stream: _contactsBloc.contacts,
+      builder: (context, AsyncSnapshot<Object> results) {
         if (!results.hasData) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,28 +87,35 @@ class UserSearchDelegate extends SearchDelegate {
               ),
             ],
           );
-        } else if (results.data.length != 0) {
-          List contacts = results.data.toList();
-          return ListView.builder(
-            itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              Contact contact = contacts[index];
-              // TODO: check if contact exists
-              return InviteItem(
-                name: contact.displayName,
-              );
-            },
+        } else {
+          List contacts = results.data;
+          if (contacts.length > 0) {
+            return ListView.builder(
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                ContactModel contact = contacts[index];
+                if (contact.uid == null) {
+                  return InviteItem(
+                    name: contact.name,
+                  );
+                } else {
+                  return ChatItem(
+                    name: contact.name,
+                    profilePicture: contact.profilePictureUrl,
+                  );
+                }
+              },
+            );
+          }
+          return Column(
+            children: <Widget>[
+              Text(
+                "No Results Found.",
+              ),
+            ],
           );
         }
-        return Column(
-          children: <Widget>[
-            Text(
-              "No Results Found.",
-            ),
-          ],
-        );
       },
-      future: results,
     );
   }
 }

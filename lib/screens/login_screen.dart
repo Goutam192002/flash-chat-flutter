@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Future loginUser(String mobileNumber, BuildContext context) {
+  void loginUser(String mobileNumber, BuildContext context) {
     setState(() {
       showSpinner = true;
     });
@@ -99,10 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: RoundedButton(
                   color: Colors.lightBlueAccent,
                   onPressed: () async {
-                    print(finalPhoneNumber);
-                    loginUser(finalPhoneNumber, context).then((value) {
-                      print(value);
-                    });
+                    loginUser(finalPhoneNumber, context);
                   },
                   title: 'Next',
                 ),

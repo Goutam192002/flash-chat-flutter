@@ -1,5 +1,6 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/bloc/contact.bloc.dart';
 import 'package:flash_chat/components/chat_item.dart';
 import 'package:flash_chat/components/user_search_delegate.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ class ChatsScreen extends StatefulWidget {
 
 class _ChatsScreenState extends State<ChatsScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final ContactsBloc _contactsBloc = ContactsBloc();
+
   Iterable<Contact> contacts;
   String query;
 

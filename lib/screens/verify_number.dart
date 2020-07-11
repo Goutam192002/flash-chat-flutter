@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/resolvers/user_resolver.dart';
-import 'package:flash_chat/screens/chats_screen.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -23,30 +21,9 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
 
   final String verificationId;
   bool showSpinner = false;
-  var onTapRecogniser;
   bool hasError = false;
   String otp = "";
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  verifyOTP() async {
-    try {
-      AuthCredential credential = PhoneAuthProvider.getCredential(
-          verificationId: verificationId, smsCode: otp);
-      await _auth.signInWithCredential(credential);
-      Navigator.pushNamed(context, ChatsScreen.id);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  @override
-  void initState() {
-    onTapRecogniser = TapGestureRecognizer()
-      ..onTap = () {
-        verifyOTP();
-      };
-    super.initState();
-  }
 
   @override
   void dispose() {

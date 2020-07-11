@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/components/upload_picture_action_item.dart';
-import 'package:flash_chat/screens/chats_screen.dart';
+import 'package:flash_chat/screens/sync_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -132,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'name': _name,
         'status': _status
       });
-      Navigator.pushReplacementNamed(context, ChatsScreen.id);
+      Navigator.pushReplacementNamed(context, SyncContacts.id);
     } catch (e) {
       setState(() {
         showSpinnerMain = false;

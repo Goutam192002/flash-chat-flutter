@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ChatItem extends StatelessWidget {
-  const ChatItem({Key key, this.profilePicture, this.name}) : super(key: key);
+  const ChatItem(
+      {Key key, this.profilePicture, this.name, this.message, this.lastSeen})
+      : super(key: key);
 
-  final profilePicture;
-  final name;
+  final String profilePicture;
+  final String name;
+  final String message;
+  final String lastSeen;
 
   @override
   Widget build(BuildContext context) {
@@ -48,19 +52,20 @@ class ChatItem extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Text(
-                                "10:00 PM",
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                ),
-                              )
+                              if (lastSeen != null)
+                                Text(
+                                  lastSeen,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                  ),
+                                )
                             ],
                           ),
                           SizedBox(
                             height: 4,
                           ),
                           Text(
-                            "This is a message",
+                            message,
                             style: TextStyle(
                               fontSize: 15,
                             ),
