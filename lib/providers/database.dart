@@ -129,6 +129,7 @@ class DatabaseProvider {
     final db = await database;
     return db.delete("Messages", where: 'id = ?', whereArgs: [id]);
   }
+
   Future<List<MessageModel>> getConversationMessages(String id) async {
     final db = await database;
     var response = await db.query(

@@ -18,7 +18,8 @@ class MessageBloc {
   }
 
   getMessages() async {
-    _messagesController.sink.add(await DatabaseProvider.db.getConversationMessages(conversationId));
+    _messagesController.sink
+        .add(await DatabaseProvider.db.getConversationMessages(conversationId));
   }
 
   addMessage(MessageModel message) async {
